@@ -7,31 +7,33 @@ SCM_THEME_PROMPT_DIRTY=" ?"
 SCM_THEME_PROMPT_CLEAN=" ✓"
 
 function distro_prompt_info() {
-	if [[ -f /etc/os-release ]]; then
-        . /etc/os-release
-    else
-        echo ""
-        return
-    fi
+	local ID_lower
 
-	local ID_lower=$(echo "$ID" | tr '[:upper:]' '[:lower:]')
+	if [[ -f /etc/os-release ]]; then
+		. /etc/os-release
+	else
+		echo ""
+		return
+	fi
+
+	ID_lower=$(echo "$ID" | tr '[:upper:]' '[:lower:]')
 
 	case "$ID_lower" in
-        *ubuntu*)	echo "" ;;
-        *debian*)	echo "" ;;
-        *fedora*)	echo "" ;;
-        *arch*|*archarm*)	echo "" ;;
-        *manjaro*)	echo "" ;;
-        *centos*)	echo "" ;;
-        *rhel*)	echo "" ;;
-        *alpine*)	echo "" ;;
-        *opensuse*)	echo "" ;;
-        *nixos*)	echo "" ;;
-        *void*)	echo "" ;;
-        *gentoo*)	echo "" ;;
-        *slackware*)	echo "" ;;
-        *)	echo "" ;;
-    esac
+		*ubuntu*) echo "" ;;
+		*debian*) echo "" ;;
+		*fedora*) echo "" ;;
+		*arch*) echo "" ;;
+		*manjaro*) echo "" ;;
+		*centos*) echo "" ;;
+		*rhel*) echo "" ;;
+		*alpine*) echo "" ;;
+		*opensuse*) echo "" ;;
+		*nixos*) echo "" ;;
+		*void*) echo "" ;;
+		*gentoo*) echo "" ;;
+		*slackware*) echo "" ;;
+		*) echo "" ;;
+	esac
 }
 
 function nodejs_prompt_info() {
@@ -52,7 +54,7 @@ function python_prompt_info() {
 
 function rust_prompt_info() {
 	if [[ -f "Cargo.toml" ]]; then
-		echo "  ${rustc --version} "
+		echo "  $(rustc --version) "
 	else
 		echo ""
 	fi
