@@ -37,7 +37,7 @@ function distro_prompt_info() {
 }
 
 function nodejs_prompt_info() {
-	if [[ -d "node_modules" ]]; then
+	if [[ -n $(command -v node) && -d "node_modules" ]]; then
 		echo "  $(node -v) "
 	else
 		echo ""
@@ -53,7 +53,7 @@ function python_prompt_info() {
 }
 
 function rust_prompt_info() {
-	if [[ -f "Cargo.toml" ]]; then
+	if [[ -n $(command -v rustc) && -f "Cargo.toml" ]]; then
 		echo "  $(rustc --version | awk '{print $2}') "
 	else
 		echo ""
