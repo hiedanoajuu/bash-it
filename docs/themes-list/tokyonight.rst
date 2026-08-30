@@ -14,12 +14,14 @@ Prerequisites
 Usage
 -----
 
-1. Add the following statements to your `~/.bashrc`
+Add the following statements to your `~/.bashrc`
 
 .. code-block:: bash
+
   export BASH_IT_THEME='tokyonight'
 
-2. Reload your shell
+Reload your shell
 
 .. code-block:: bash
+  
   . ~/.bashrc
