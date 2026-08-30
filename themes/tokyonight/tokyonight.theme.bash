@@ -19,7 +19,7 @@ function distro_prompt_info() {
 	ID_lower=$(echo "$ID" | tr '[:upper:]' '[:lower:]')
 
 	case "$ID_lower" in
-		*ubuntu*) echo "" ;;
+		*ubuntu*) echo "" ;;
 		*debian*) echo "" ;;
 		*fedora*) echo "" ;;
 		*arch*) echo "" ;;
@@ -32,7 +32,7 @@ function distro_prompt_info() {
 		*void*) echo "" ;;
 		*gentoo*) echo "" ;;
 		*slackware*) echo "" ;;
-		*) echo "" ;;
+		*) echo "" ;;
 	esac
 }
 
@@ -54,7 +54,7 @@ function python_prompt_info() {
 
 function rust_prompt_info() {
 	if [[ -f "Cargo.toml" ]]; then
-		echo "  $(rustc --version) "
+		echo "  $(rustc --version | awk '{print $2}') "
 	else
 		echo ""
 	fi
