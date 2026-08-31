@@ -38,15 +38,9 @@ function distro_prompt_info() {
 	esac
 }
 
-function nodejs_prompt_info_cache() {
-	if [[ -n $(command -v node) ]]; then
-		echo "  $(node -v) "
-	fi
-}
-
 function nodejs_prompt_info() {
-	if [[ -d "node_modules" && -n "$cached_nodejs_prompt_info" ]]; then
-		echo "$cached_nodejs_prompt_info"
+	if [[ -n $(command -v node) && -d "node_modules" ]]; then
+		echo "  $(node -v) "
 	fi
 }
 
@@ -56,15 +50,9 @@ function python_prompt_info() {
 	fi
 }
 
-function rust_prompt_info_cache() {
-	if [[ -n $(command -v rustc) ]]; then
-		echo "  $(rustc --version | awk '{print $2}') "
-	fi
-}
-
 function rust_prompt_info() {
-	if [[ -f "Cargo.toml" && -n "$cached_rust_prompt_info" ]]; then
-		echo "$cached_rust_prompt_info"
+	if [[ -n $(command -v rustc) && -f "Cargo.toml" ]]; then
+		echo "  $(rustc --version | awk '{print $2}') "
 	fi
 }
 
@@ -85,10 +73,6 @@ sep3="\[\033[38;2;118;159;240m\]\[\033[48;2;57;66;96m\]"
 sep4="\[\033[38;2;57;66;96m\]\[\033[48;2;33;39;54m\]"
 sep5="\[\033[38;2;33;39;54m\]\[\033[48;2;29;34;48m\]"
 sep6="\[\033[38;2;29;34;48m\]\[\033[49m\] "
-
-# Cached prompt info
-cached_nodejs_prompt_info=$(nodejs_prompt_info_cache)
-cached_rust_prompt_info=$(rust_prompt_info_cache)
 
 if [[ "${USER:-${LOGNAME?}}" = root ]]; then
 	character="▶"
