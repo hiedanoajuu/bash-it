@@ -40,7 +40,7 @@ function distro_prompt_info() {
 
 function nodejs_prompt_info_cache() {
 	if [[ -n $(command -v node) ]]; then
-		 echo "  $(node -v) "
+		echo "  $(node -v) "
 	fi
 }
 
