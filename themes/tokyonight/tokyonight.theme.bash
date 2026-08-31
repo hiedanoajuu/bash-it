@@ -9,8 +9,6 @@ SCM_THEME_PROMPT_CLEAN=" ✓"
 function distro_prompt_info() {
 	local id
 
-	[[ -n "$distro_prompt_info" ]] && echo "not empty" && return
-
 	if [[ -f /etc/os-release ]]; then
 		id=$(
 			# shellcheck disable=SC1091
