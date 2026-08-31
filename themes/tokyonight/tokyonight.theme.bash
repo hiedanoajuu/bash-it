@@ -74,17 +74,17 @@ sep4="\[\033[38;2;57;66;96m\]\[\033[48;2;33;39;54m\]"
 sep5="\[\033[38;2;33;39;54m\]\[\033[48;2;29;34;48m\]"
 sep6="\[\033[38;2;29;34;48m\]\[\033[49m\] "
 
-if [[ "${USER:-${LOGNAME?}}" = root ]]; then
-	character="▶"
-else
-	character="❯"
-fi
-
 function prompt_command() {
 	if [[ "$?" -eq 0 ]]; then
 		cursor_color="${bold_green?}"
 	else
 		cursor_color="${bold_red?}"
+	fi
+
+	if [[ "${USER:-${LOGNAME?}}" = root ]]; then
+		character="▶"
+	else
+		character="❯"
 	fi
 
 	# Dynamic prompt info
