@@ -12,8 +12,8 @@ function distro_prompt_info() {
 	[[ -n "$distro_prompt_info" ]] && echo "not empty" && return
 
 	if [[ -f /etc/os-release ]]; then
-		# shellcheck disable=SC1091
 		id=$(
+			# shellcheck disable=SC1091
 			. /etc/os-release
 			echo "$ID" | tr '[:upper:]' '[:lower:]'
 		)
