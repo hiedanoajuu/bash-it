@@ -23,5 +23,5 @@ Add the following statements to your `~/.bashrc`
 Reload your shell
 
 .. code-block:: bash
-  
-  . ~/.bashrc
+
+   . ~/.bashrc

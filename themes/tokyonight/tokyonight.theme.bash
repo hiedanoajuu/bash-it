@@ -7,18 +7,22 @@ SCM_THEME_PROMPT_DIRTY=" ?"
 SCM_THEME_PROMPT_CLEAN=" ✓"
 
 function distro_prompt_info() {
-	local ID_lower
+	local id
+
+	[[ -n "$distro_prompt_info" ]] && echo "not empty" && return
 
 	if [[ -f /etc/os-release ]]; then
-		. /etc/os-release
+		# shellcheck disable=SC1091
+		id=$(
+			. /etc/os-release
+			echo "$ID" | tr '[:upper:]' '[:lower:]'
+		)
 	else
 		echo ""
 		return
 	fi
 
-	ID_lower=$(echo "$ID" | tr '[:upper:]' '[:lower:]')
-
-	case "$ID_lower" in
+	case "$id" in
 		*ubuntu*) echo "" ;;
 		*debian*) echo "" ;;
 		*fedora*) echo "" ;;
@@ -37,7 +41,7 @@ function distro_prompt_info() {
 }
 
 function nodejs_prompt_info() {
-	if [[ -n $(command -v node) && -d "node_modules" ]]; then
+	if [[ -n $(command -v node) && -d "node_modules" && -z "$nodejs_prompt_info" ]]; then
 		echo "  $(node -v) "
 	else
 		echo ""
@@ -45,7 +49,7 @@ function nodejs_prompt_info() {
 }
 
 function python_prompt_info() {
-	if [[ -n "$VIRTUAL_ENV" ]]; then
+	if [[ -n "$VIRTUAL_ENV" && -z "$python_prompt_info" ]]; then
 		echo "  ${VIRTUAL_ENV##*/} "
 	else
 		echo ""
@@ -53,43 +57,51 @@ function python_prompt_info() {
 }
 
 function rust_prompt_info() {
-	if [[ -n $(command -v rustc) && -f "Cargo.toml" ]]; then
+	if [[ -n $(command -v rustc) && -f "Cargo.toml" && -z "$rust_prompt_info" ]]; then
 		echo "  $(rustc --version | awk '{print $2}') "
 	else
 		echo ""
 	fi
 }
 
+# Static prompt info
+distro_prompt_info=" $(distro_prompt_info) "
+
+# Colors
+dir_color="\[\033[38;2;227;229;229m\]\[\033[48;2;118;159;240m\]"
+distro_color="\[\033[48;2;163;174;210m\]\[\033[38;2;9;12;12m\]"
+scm_color="\[\033[38;2;118;159;240m\]\[\033[48;2;57;66;96m\]"
+clock_color="\[\033[38;2;160;169;203m\]\[\033[48;2;29;34;48m\]"
+other_color="\[\033[38;2;57;66;96m\]\[\033[48;2;33;39;54m\]"
+
+# Separators
+sep1="\[\033[38;2;163;174;210m\]░▒▓"
+sep2="\[\033[48;2;118;159;240m\]\[\033[38;2;163;174;210m\]"
+sep3="\[\033[38;2;118;159;240m\]\[\033[48;2;57;66;96m\]"
+sep4="\[\033[38;2;57;66;96m\]\[\033[48;2;33;39;54m\]"
+sep5="\[\033[38;2;33;39;54m\]\[\033[48;2;29;34;48m\]"
+sep6="\[\033[38;2;29;34;48m\]\[\033[49m\] "
+
+if [[ "${USER:-${LOGNAME?}}" = root ]]; then
+	character="▶"
+else
+	character="❯"
+fi
+
 function prompt_command() {
-	local scm_prompt_info
-	local distro_prompt_info
-	local time_prompt_info
-	local nodejs_prompt_info
-	local python_prompt_info
-	local rust_prompt_info
-
-	dir_color="\[\033[38;2;227;229;229m\]\[\033[48;2;118;159;240m\]"
-	distro_color="\[\033[48;2;163;174;210m\]\[\033[38;2;9;12;12m\]"
-	scm_color="\[\033[38;2;118;159;240m\]\[\033[48;2;57;66;96m\]"
-	clock_color="\[\033[38;2;160;169;203m\]\[\033[48;2;29;34;48m\]"
-	other_color="\[\033[38;2;57;66;96m\]\[\033[48;2;33;39;54m\]"
-
-	if [[ "${USER:-${LOGNAME?}}" = root ]]; then
-		cursor_color="${bold_red?}"
-		user_color="${green?}"
-	else
+	if [[ "$?" -eq 0 ]]; then
 		cursor_color="${bold_green?}"
-		user_color="${white?}"
+	else
+		cursor_color="${bold_red?}"
 	fi
 
+	# Dynamic prompt info
 	scm_prompt_info="$(scm_prompt_info)"
-	distro_prompt_info=" $(distro_prompt_info) "
-	time_prompt_info="  $(date +%H:%M) "
 	nodejs_prompt_info="$(nodejs_prompt_info)"
 	python_prompt_info="$(python_prompt_info)"
 	rust_prompt_info="$(rust_prompt_info)"
 
-	PS1="\n\[\033[38;2;163;174;210m\]░▒▓${distro_color}${distro_prompt_info}\[\033[48;2;118;159;240m\]\[\033[38;2;163;174;210m\]${dir_color} \w \[\033[38;2;118;159;240m\]\[\033[48;2;57;66;96m\]${scm_color}${scm_prompt_info}\[\033[38;2;57;66;96m\]\[\033[48;2;33;39;54m\]${other_color}${nodejs_prompt_info}${python_prompt_info}${rust_prompt_info}\[\033[38;2;33;39;54m\]\[\033[48;2;29;34;48m\]${clock_color}${time_prompt_info}\[\033[38;2;29;34;48m\]\[\033[49m\] \n${cursor_color}❯ ${normal?}"
+	PS1="\n${sep1}${distro_color}${distro_prompt_info}${sep2}${dir_color} \w ${sep3}${scm_color}${scm_prompt_info}${sep4}${other_color}${nodejs_prompt_info}${python_prompt_info}${rust_prompt_info}${sep5}${clock_color}   \A ${sep6}\n${cursor_color}${character} ${normal?}"
 }
 
 safe_append_prompt_command prompt_command
